@@ -4,23 +4,30 @@ import unicodedata
 import re
 
 def strip_accents(s):
-   return ''.join(c for c in unicodedata.normalize('NFD', s)
-                  if unicodedata.category(c) != 'Mn')
+   return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
 
 three = [
     (["ahoj","cus"],
      lambda inp: print("nazdar"),
      [
          (["se mas", "ti je"], lambda inp: print("celkem fajn"))
-         ]),
+     ]
+    ),
     (["se mas","ti je"],
-     lambda inp: print("na prd")),
+     lambda inp: print("na prd")
+    ),
     (["datum"],
-     lambda inp: print(datetime.datetime.now().strftime("%Y/%m/%d"))),
+     lambda inp: print(datetime.datetime.now().strftime("%Y/%m/%d"))
+    ),
     (["cas","hodin"],
-     lambda inp: print(datetime.datetime.now().strftime("%H:%M:%S"))),
-     (["chapes?","neopic"],lambda inp: print(inp)),
-     (["s{3}"], lambda inp: print("nope"))
+     lambda inp: print(datetime.datetime.now().strftime("%H:%M:%S"))
+    ),
+    (["chapes?","neopic"],
+     lambda inp: print(inp)
+    ),
+    (["s{3}"],
+     lambda inp: print("nope")
+    )
     ]
 
 def Resolve(three, inp=None):
