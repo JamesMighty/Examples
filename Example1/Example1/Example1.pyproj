@@ -5,13 +5,14 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>7e94c872-0926-4f7a-845a-3207452d881c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Example1.py</StartupFile>
+    <StartupFile>Example2.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>Example1</Name>
     <RootNamespace>Example1</RootNamespace>
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +23,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Example2.py" />
     <Compile Include="Example1.py" />
   </ItemGroup>
   <PropertyGroup>
