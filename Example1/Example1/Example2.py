@@ -1,6 +1,7 @@
 import datetime
 import time
 import unicodedata
+import re
 
 def strip_accents(s):
    return ''.join(c for c in unicodedata.normalize('NFD', s)
@@ -8,28 +9,30 @@ def strip_accents(s):
 
 three = [
     (["ahoj","cus"],
-     lambda: print("nazdar"),
+     lambda inp: print("nazdar"),
      [
-         (["se mas", "ti je"], lambda: print("celkem fajn"))
+         (["se mas", "ti je"], lambda inp: print("celkem fajn"))
          ]),
     (["se mas","ti je"],
-     lambda: print("na prd")),
+     lambda inp: print("na prd")),
     (["datum"],
-     lambda: print(datetime.datetime.now().strftime("%Y/%m/%d"))),
+     lambda inp: print(datetime.datetime.now().strftime("%Y/%m/%d"))),
     (["cas","hodin"],
-     lambda: print(datetime.datetime.now().strftime("%H:%M:%S"))),
+     lambda inp: print(datetime.datetime.now().strftime("%H:%M:%S"))),
+     (["chapes?","neopic"],lambda inp: print(inp)),
+     (["s{3}"], lambda inp: print("nope"))
     ]
 
 def Resolve(three, inp=None):
     doPrintUnresolved = True
     resolved = False
     if inp == None:
-        inp = input()
+        inp = strip_accents(input().lower())
     else:
         doPrintUnresolved = False
     for tuple in three: 
-        if any(condition in strip_accents(inp.lower()) for condition in tuple[0]):
-            tuple[1]()
+        if any((string in inp or re.match(string,inp)) for string in tuple[0]):
+            tuple[1](inp)
             resolved = True
             if len(tuple) == 3:
                 if Resolve(tuple[2],inp):    
@@ -42,4 +45,4 @@ while True:
     Resolve(three)
 
 
-# Zkus do konzole napsat neco jako: Ahoj, jak se mas?
+# Zkus do konzole napsat neco jako: Ahoj, jak se mas? nebo Ahoj, kolik je hodin?
