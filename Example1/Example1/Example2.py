@@ -2,6 +2,7 @@ import datetime
 import time
 import unicodedata
 import re
+from command import node
 
 def any_common(a, b): 
     a_set = set(a) 
@@ -15,51 +16,61 @@ def strip_accents(s):
    return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
 
 three = [
-    (["ahoj","cus"],
+    node(["ahoj","cus"],
      lambda inp: print("nazdar"),
      [
-         (["se mas", "ti je"],
+         node(["se mas", "ti je"],
           lambda inp: print("celkem fajn")
          )
      ]
     ),
-    (["se mas","ti je"],
+    node(["se mas","ti je"],
      lambda inp: print("na prd")
     ),
-    (["datum"],
+    node(["datum"],
      lambda inp: print(datetime.datetime.now().strftime("%Y/%m/%d"))
     ),
-    (["cas","hodin", "kolik je"],
+    node(["cas","hodin", "kolik je"],
      lambda inp: print(datetime.datetime.now().strftime("%H:%M:%S"))
     ),
-    (["neopic"],
+    node(["neopic"],
      lambda inp: print(inp),
      [
-         (["prosim"],
+         node(["prosim"],
             lambda inp: [print("ok, sorry"),inp][-0]
          )
      ]
     ),
-    (["s{3}"],
+    node(["s{3}"],
      lambda inp: print("nope")
+    ),
+    node(["pomoc","co?"],
+     lambda inp: print( "\n".join([str(tupl[0]) for tupl in three]))
     )
     ]
 
 def Resolve(three, inp=None, allResolvedStrings=[]):
     doPrintUnresolved = True
     resolved = False
+    todo = []
     if inp == None:
         inp = strip_accents(input("> ").lower())
     else:
         doPrintUnresolved = False
-    for tuple in three: 
-        matchingStrings = [string for string in tuple[0] if (string in inp or re.match(string,inp))]
+    for comm in three: 
+        matchingStrings = [string for string in comm.Conditions if (string in inp or re.match(string,inp))]
+        indexes = [inp.index(string) for string in comm.Conditions if (string in inp or re.match(string,inp))]
         if len(matchingStrings) > 0 and not any_common(matchingStrings,allResolvedStrings):
-            result = tuple[1](inp)
+            inp = comm.Decorator(inp) # mozna se bude nekdy hodit, idk
+            todo.append( (min(indexes),comm.OwnCommand) )
             resolved = True
             allResolvedStrings+=matchingStrings
-            if len(tuple) == 3:
-                Resolve(tuple[2],inp,allResolvedStrings)
+            if len(comm.CommandList) > 0:
+                Resolve(comm.CommandList,inp,allResolvedStrings) 
+    if len(todo) is not 0:
+        todo = sorted(todo, key = lambda tuple: tuple[0])
+        for comm in todo:
+            comm[1](inp)
     if doPrintUnresolved and not resolved:
         print("co?")
     #print(allResolvedStrings)
