@@ -3,51 +3,9 @@ import time
 import unicodedata
 import re
 from command import node
+from utility import *
+from nodeThree import Three
 
-def any_common(a, b): 
-    a_set = set(a) 
-    b_set = set(b) 
-    if (a_set & b_set): 
-        return True 
-    else: 
-        return False
-
-def strip_accents(s):
-   return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
-
-three = [
-    node(["ahoj","cus"],
-     lambda inp: print("nazdar"),
-     [
-         node(["se mas", "ti je"],
-          lambda inp: print("mam se celkem fajn")
-         )
-     ]
-    ),
-    node(["se mas","ti je"],
-     lambda inp: print("na prd")
-    ),
-    node(["datum"],
-     lambda inp: print(datetime.datetime.now().strftime("%Y/%m/%d"))
-    ),
-    node(["cas","hodin", "kolik je"],
-     lambda inp: print("prave je "+datetime.datetime.now().strftime("%H:%M:%S"))
-    ),
-    node(["neopic"],
-     lambda inp: print(inp),
-     [
-         node(["prosim"],
-            lambda inp: [print("ok, sorry"),inp][-0]
-         )
-     ]
-    ),
-    node(["s{3}"],
-     lambda inp: print("nope")
-    ),
-    node(["pomoc","co?"],
-     lambda inp: print( "\n".join([str(tupl[0]) for tupl in three]))
-    )
-    ]
 
 def Resolve(three, inp=None, allResolvedStrings=[], doCommit=True):
     doPrintUnresolved = True
@@ -68,7 +26,7 @@ def Resolve(three, inp=None, allResolvedStrings=[], doCommit=True):
             if len(comm.CommandList) > 0:
                 todo += Resolve(comm.CommandList,inp,allResolvedStrings, doCommit=False) 
 
-    if len(todo) is not 0 and doCommit:
+    if len(todo) > 0 and doCommit:
         todo = sorted(todo, key = lambda tuple: tuple[0])
         for comm in todo:
             comm[1].OwnCommand(inp)
@@ -79,7 +37,7 @@ def Resolve(three, inp=None, allResolvedStrings=[], doCommit=True):
     return todo
 
 while True:
-    Resolve(three, None, [])
+    Resolve(Three, None, [])
 
 
 # Zkus do konzole napsat neco jako: Ahoj, jak se mas? nebo Ahoj, kolik je hodin?
