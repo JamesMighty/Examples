@@ -28,8 +28,12 @@ def Resolve(three, inp=None, allResolvedStrings=[], doCommit=True):
 
     if len(todo) > 0 and doCommit:
         todo = sorted(todo, key = lambda tuple: tuple[0])
+        wholeOutput = "" # sberac
         for comm in todo:
-            comm[1].OwnCommand(inp)
+            outp = comm[1].OwnCommand(inp) # vlastni vystup
+            wholeOutput += outp
+            print(outp)
+        #TODO: TTL(wholeOutput)
             
     if doPrintUnresolved and not resolved:
         print("co?")
