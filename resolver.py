@@ -6,7 +6,7 @@ def Do(todoList, inp):
     wholeOutput = ""
     for item in todoList:
         outp = item[1].OwnCommand(inp)
-        wholeOutput += (outp if outp is not None else "" ) + ". "
+        wholeOutput += (outp + (", " if len(item[2]) > 0 else ". ") if outp is not None else "" ) 
         if len(item[2]) > 0:
             wholeOutput += Do(item[2],inp)
     return wholeOutput
