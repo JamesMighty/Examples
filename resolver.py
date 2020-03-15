@@ -27,7 +27,7 @@ def Resolve(three, inp=None, allResolvedMatches=[], lastMatch=0, doPrintUnresolv
                 resolved = True
                 allResolvedMatches+=matches
                 if len(comm.CommandList) > 0:
-                    additionalTodo =  Resolve(comm.CommandList,inp,allResolvedMatches, lastMatch=matchOn, doPrintUnresolved=False)[0]
+                    additionalTodo =  Resolve(comm.CommandList,inp,allResolvedMatches, lastMatch=(0 if comm.SlackSyntax else matchOn), doPrintUnresolved=False)[0]
                     todo.append( (matchOn,comm, additionalTodo) )
                 else:
                     todo.append( (matchOn,comm, []) )
