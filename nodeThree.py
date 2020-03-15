@@ -32,6 +32,6 @@ Three = [
      lambda inp: "nope"
     ),
     node(["pomoc","co?"],
-     lambda inp: "\n".join([str(tupl[0]) for tupl in Three])
+     lambda inp: print(Three)
     )
     ]
