@@ -11,26 +11,23 @@ def Do(todoList, inp):
             wholeOutput += Do(item[2],inp)
     return wholeOutput
 
-def Resolve(three, inp=None, allResolvedMatches=[], lastMatch=0):
-    doPrintUnresolved = True
+def Resolve(three, inp=None, allResolvedMatches=[], lastMatch=0, doPrintUnresolved=False):
     resolved = False
     todo = []
     if inp == None:
         inp = strip_accents(input("> ").lower())
     else:
         inp = strip_accents(inp.lower())
-        doPrintUnresolved = False
     for comm in three: 
         matches = [(inp.index(string),string) for string in comm.Conditions if string in inp] + [(re.search(string, inp).span()[0], string) for string in comm.Conditions if re.search(string,inp) is not None]
         if len(matches) > 0:
             matchOn = min([match[0] for match in matches])
             if not any_common([match[1] for match in matches],[resolvedMatch[1] for resolvedMatch in allResolvedMatches]) and lastMatch <= matchOn:
-                matches = sorted(matches, key=lambda match: match[0])
                 inp = comm.Decorator(inp) # mozna se bude nekdy hodit, idk
                 resolved = True
                 allResolvedMatches+=matches
                 if len(comm.CommandList) > 0:
-                    additionalTodo =  Resolve(comm.CommandList,inp,allResolvedMatches, lastMatch=matchOn)[0]
+                    additionalTodo =  Resolve(comm.CommandList,inp,allResolvedMatches, lastMatch=matchOn, doPrintUnresolved=False)[0]
                     todo.append( (matchOn,comm, additionalTodo) )
                 else:
                     todo.append( (matchOn,comm, []) )

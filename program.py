@@ -3,8 +3,8 @@ import resolver
 
 while True:
     inp = input("> ")
-    todo = resolver.Resolve(Three, inp=inp, allResolvedMatches=[], lastMatch=0)[0]
-    print(todo)
+    todo = resolver.Resolve(Three, inp=inp, allResolvedMatches=[], lastMatch=0, doPrintUnresolved=True)[0]
+    #print(todo)
     outp = resolver.Do(todo,inp)
     print(outp)
     
