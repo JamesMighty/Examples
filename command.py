@@ -1,9 +1,9 @@
-import enum
+import flags
 
-class SyntaxE(enum.Enum):
+class SyntaxE(flags.Flags):
     First = 1
     Last = 2
-    Slack = 4
+    Slack = 1 | 2
 
 class node:
     def __init__(self, conditions, owncommand, commandlist = [], decorator=lambda inp: inp, syntax=SyntaxE.First):
