@@ -1,15 +1,15 @@
+import flags
 
+class SyntaxE(flags.Flags):
+    First = 1
+    Last = 2
+    Slack = 1 | 2
 
 class node:
-    Conditions = []
-    OwnCommand = lambda inp: inp
-    CommandList = []
-    Decorator = lambda inp: inp
-    SlackSyntax = False
-
-    def __init__(self, conditions, owncommand, commandlist = [], decorator=lambda inp: inp, slacksyntax=False):
+    def __init__(self, conditions, owncommand, commandlist = [], decorator=lambda inp: inp, syntax=SyntaxE.First):
         self.Conditions = conditions
         self.OwnCommand = owncommand
         self.Decorator = decorator
         self.CommandList = commandlist
-        self.SlackSyntax = slacksyntax
+        self.Syntax = syntax
+
