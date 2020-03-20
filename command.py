@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import flags
+from flags import Flags
 
-class SyntaxE(flags.Flags):
+class SyntaxE(Flags):
     Slack = 1
     Ahead = 2
     Next = 4
