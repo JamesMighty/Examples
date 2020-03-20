@@ -1,12 +1,13 @@
+# -*- coding: utf-8 -*-
 import flags
 
 class SyntaxE(flags.Flags):
-    First = 1
-    Last = 2
-    Slack = 1 | 2
+    Slack = 1
+    Ahead = 2
+    Next = 4
 
 class node:
-    def __init__(self, conditions, owncommand, commandlist = [], decorator=lambda inp: inp, syntax=SyntaxE.First):
+    def __init__(self, conditions, owncommand, commandlist = [], decorator=lambda inp: inp, syntax=SyntaxE.Ahead):
         self.Conditions = conditions
         self.OwnCommand = owncommand
         self.Decorator = decorator

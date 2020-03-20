@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from utility import *
 from command import *
 import re
@@ -13,11 +14,11 @@ def Do(todoList, inp):
     return wholeOutput
 
 def SyntaxCheck(lastMatch, matchOn, syntaxSetting):
-    isConditionFirst = lastMatch <= matchOn if SyntaxE.First in syntaxSetting else True
-    isConditionLast = lastMatch >= matchOn if SyntaxE.Last in syntaxSetting else True
-    return isConditionFirst or isConditionLast
+    isConditionFirst = lastMatch <= matchOn if SyntaxE.Ahead in syntaxSetting else True
+    isConditionLast = lastMatch >= matchOn if SyntaxE.Next in syntaxSetting else True
+    return isConditionFirst and isConditionLast
 
-def Resolve(three, inp=None, allResolvedMatches=[], lastMatch=0, doPrintUnresolved=False, syntaxSetting=SyntaxE.First):
+def Resolve(three, inp=None, allResolvedMatches=[], lastMatch=0, doPrintUnresolved=False, syntaxSetting=SyntaxE.Ahead):
     resolved = False
     todo = []
     if inp == None:
@@ -33,7 +34,7 @@ def Resolve(three, inp=None, allResolvedMatches=[], lastMatch=0, doPrintUnresolv
                 resolved = True
                 allResolvedMatches+=matches
                 if len(comm.CommandList) > 0:
-                    additionalTodo =  Resolve(comm.CommandList,inp,allResolvedMatches, lastMatch=matchOn, doPrintUnresolved=False,syntaxSetting=comm.Syntax)[0]
+                    additionalTodo = Resolve(comm.CommandList,inp,allResolvedMatches, lastMatch=matchOn, doPrintUnresolved=False,syntaxSetting=comm.Syntax)[0]
                     todo.append( (matchOn,comm, additionalTodo) )
                 else:
                     todo.append( (matchOn,comm, []) )
