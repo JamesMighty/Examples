@@ -7,10 +7,11 @@ class SyntaxE(Flags):
     Next = 4
 
 class node:
-    def __init__(self, conditions, owncommand, commandlist = [], decorator=lambda inp: inp, syntax=SyntaxE.Ahead):
+    def __init__(self, conditions, owncommand, commandlist = [], decorator=lambda inp: inp, syntax=SyntaxE.Ahead, useRegex=False):
         self.Conditions = conditions
         self.OwnCommand = owncommand
         self.Decorator = decorator
         self.CommandList = commandlist
         self.Syntax = syntax
+        self.UseRegex = useRegex
 
