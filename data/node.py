@@ -6,7 +6,7 @@ class SyntaxE(Flags):
     Ahead = 2
     Next = 4
 
-class node:
+class Node:
     def __init__(self, conditions, owncommand, commandlist = [], decorator=lambda inp: inp, syntax=SyntaxE.Ahead, useRegex=False):
         self.Conditions = conditions
         self.OwnCommand = owncommand

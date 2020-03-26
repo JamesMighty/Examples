@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from data.utility import *
 from data.node import *
-from data.todoItem import *
+from data.todoItem import TodoItem
+from data.match import Match
 import re
 
 def Do(todoList, inp):
@@ -14,9 +15,9 @@ def Do(todoList, inp):
             outp = item.Command.OwnCommand(inp, item.RegexGroups)
         else:
             outp = item.Command.OwnCommand(inp)
-        wholeOutput += (outp + (", " if len(item.SubCommandThree) > 0 else ". ") if outp is not None else "" ) 
-        if len(item.SubCommandThree) > 0:
-            wholeOutput += Do(item.SubCommandThree,inp)
+        wholeOutput += (outp + (", " if len(item.SubTodoList) > 0 else ". ") if outp is not None else "" ) 
+        if len(item.SubTodoList) > 0:
+            wholeOutput += Do(item.SubTodoList,inp)
     return wholeOutput
 
 def SyntaxCheck(lastMatch, matchOn, syntaxSetting):
@@ -32,19 +33,19 @@ def Resolve(three, inp=None, allResolvedMatches=[], lastMatch=0, doPrintUnresolv
     else:
         inp = strip_accents(inp.lower())
     for comm in three: 
-        matches = [(inp.index(string),string, None) for string in comm.Conditions if string in inp] + [(re.search(string, inp).span()[0], string, re.findall(string, inp)) for string in comm.Conditions if re.search(string,inp) is not None and comm.UseRegex]
+        matches = [Match(inp.index(string),string) for string in comm.Conditions if string in inp] + [Match(re.search(string, inp).span()[0], string, re.findall(string, inp)) for string in comm.Conditions if re.search(string,inp) is not None and comm.UseRegex]
         if len(matches) > 0:
             #print(matches)
-            matchOn = min([match[0] for match in matches])
-            if not any_common([match[1] for match in matches],[resolvedMatch[1] for resolvedMatch in allResolvedMatches]) and SyntaxCheck(lastMatch, matchOn, syntaxSetting):
+            matchOn = min([match.Index for match in matches])
+            if not any_common([match.String for match in matches],[resolvedMatch.String for resolvedMatch in allResolvedMatches]) and SyntaxCheck(lastMatch, matchOn, syntaxSetting):
                 inp = comm.Decorator(inp) # not used
                 resolved = True
                 allResolvedMatches+=matches
                 if len(comm.CommandList) > 0:
                     additionalTodo = Resolve(comm.CommandList,inp,allResolvedMatches, lastMatch=matchOn, doPrintUnresolved=False,syntaxSetting=comm.Syntax)[0]
-                    todo.append( todoItem(matchOn,comm, additionalTodo, [match[2] for match in matches if match[2] is not None]) )
+                    todo.append( TodoItem(matchOn,comm, additionalTodo, [match.RegexGroups for match in matches if match.RegexGroups is not None]) )
                 else:
-                    todo.append( todoItem(matchOn,comm, [], [match[2] for match in matches if match[2] is not None]) )
+                    todo.append( TodoItem(matchOn,comm, [], [match.RegexGroups for match in matches if match.RegexGroups is not None]) )
             
     if doPrintUnresolved and not resolved:
         print("co?")

@@ -1,8 +1,8 @@
 
 
-class todoItem:
+class TodoItem:
     def __init__(self, matchIndex, command, subCommandThree, regexGroups):
         self.MatchIndex = matchIndex
         self.Command = command
-        self.SubCommandThree = subCommandThree
+        self.SubTodoList = subCommandThree
         self.RegexGroups = regexGroups
