@@ -46,7 +46,8 @@ Three = [
      lambda inp: print(Three)
     ),
     Node(["co (.*) delas"],
-     lambda inp, kw: "idk, " + str(kw[0][0]) + "?",
-     useRegex=True
+     lambda inp, kw: "idk, " + str(kw[0][0]),
+     useRegex=True,
+     desiredEnd="?"
     )
     ]

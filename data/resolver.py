@@ -15,7 +15,7 @@ def Do(todoList, inp):
             outp = item.Command.OwnCommand(inp, item.RegexGroups)
         else:
             outp = item.Command.OwnCommand(inp)
-        wholeOutput += (outp + (", " if len(item.SubTodoList) > 0 else ". ") if outp is not None else "" ) 
+        wholeOutput += (outp + (", " if len(item.SubTodoList) > 0 else item.Command.DesiredEnd + " ") if outp is not None else "" ) 
         if len(item.SubTodoList) > 0:
             wholeOutput += Do(item.SubTodoList,inp)
     return wholeOutput
@@ -48,5 +48,5 @@ def Resolve(three, inp=None, allResolvedMatches=[], lastMatch=0, doPrintUnresolv
                     todo.append( TodoItem(matchOn,comm, [], [match.RegexGroups for match in matches if match.RegexGroups is not None]) )
             
     if doPrintUnresolved and not resolved:
-        print("co?")
+        todo.append(TodoItem(0,Node([],lambda inp: "co",desiredEnd="?"),[]))
     return todo,inp
