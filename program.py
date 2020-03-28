@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from nodeThree import Three
-import resolver
-from utility import TTS
+from data.nodeThree import Three
+import data.resolver as resolver
+from data.utility import TTS
 import pygame
 
 pygame.mixer.init()
