@@ -1,53 +1,71 @@
 # -*- coding: utf-8 -*-
 from data.node import *
 import datetime
+import data.userAPI as uapi
 
 global Three
 Three = [
     Node(["ahoj","cus"],
-     lambda inp: "nazdar",
+     lambda setx, inp: "nazdar",
      [
          Node(["se mas", "ti je"], 
-          lambda inp: "mám se celkem fajn"
+          lambda setx, inp: "mám se celkem fajn"
          )
      ]
     ),
     Node(["pls"],
-     lambda inp: None,
+     lambda setx, inp: None,
      [
          Node(["se mas"],
-          lambda inp: "naprosto skvěle"
+          lambda setx, inp: "naprosto skvěle"
          )
      ],
      syntax=SyntaxE.Slack
     ),
     Node(["se mas","ti je"],
-     lambda inp: "na prd"
+     lambda setx, inp: "na prd"
     ),
     Node(["datum"],
-     lambda inp: datetime.datetime.now().strftime("%Y/%m/%d")
+     lambda setx, inp: datetime.datetime.now().strftime("%Y/%m/%d")
     ),
     Node(["cas","hodin", "kolik je"],
-     lambda inp: "právě je "+datetime.datetime.now().strftime("%H:%M:%S")
+     lambda setx, inp: "právě je "+datetime.datetime.now().strftime("%H:%M:%S")
     ),
     Node(["neopic"],
-     lambda inp: inp,
+     lambda setx, inp: inp,
      [
          Node(["prosim"],
-            lambda inp: "ok sry"
+            lambda setx, inp: "ok sry"
          )
      ]
     ),
     Node(["s{3}"],
-     lambda inp: "nope",
+     lambda setx, inp: "nope",
      useRegex=True
     ),
     Node(["pomoc","co?"],
-     lambda inp: print(Three)
+     lambda setx, inp: print(Three)
     ),
     Node(["co (.*) delas"],
-     lambda inp, kw: "idk, " + str(kw[0][0]),
+     lambda setx, inp, kw: "idk, " + str(kw[0][0]),
      useRegex=True,
      desiredEnd="?"
+    ),
+    Node(["zmen"],
+     None,
+     [
+         DoOnlyOne([
+            Node(["jmeno na '(.*)'"],
+                lambda setx, inp, kw: uapi.ChangeUsername(setx, username=kw[0][0]),
+                useRegex=True
+            ),
+            Node(["jmeno"],
+                lambda setx, inp: uapi.ChangeUsername(setx)
+            )
+         ]),
+         Node(["format"],
+            lambda setx, inp: uapi.ChangeOutputFormat(setx)
+         )
+     ]
     )
     ]

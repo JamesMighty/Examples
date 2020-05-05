@@ -7,7 +7,14 @@ class SyntaxE(Flags):
     Next = 4
 
 class Node:
-    def __init__(self, conditions, owncommand, commandlist = [], decorator=lambda inp: inp, syntax=SyntaxE.Ahead, useRegex=False, desiredEnd = "."):
+    def __init__(self,
+         conditions,
+         owncommand,
+         commandlist = [],
+         decorator=None,
+         syntax=SyntaxE.Ahead,
+         useRegex=False, desiredEnd = ".",
+         doOnlyOneFromSubthree = False):
         self.Conditions = conditions
         self.OwnCommand = owncommand
         self.Decorator = decorator
@@ -15,4 +22,24 @@ class Node:
         self.Syntax = syntax
         self.UseRegex = useRegex
         self.DesiredEnd = desiredEnd
+        self.DoOnlyOneFromSubthree = doOnlyOneFromSubthree
+
+class DoOnlyOne(Node):
+    def __init__(self,
+     commandlist,
+     decorator=None,
+     syntax=SyntaxE.Ahead,
+     useRegex=False,
+     desiredEnd='.',
+     doOnlyOneFromSubthree=True):
+        super().__init__(
+            [""],
+            None,
+            commandlist=commandlist,
+            decorator=decorator,
+            syntax=syntax,
+            useRegex=useRegex,
+            desiredEnd=desiredEnd,
+            doOnlyOneFromSubthree=doOnlyOneFromSubthree
+        )
 
