@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from flags import Flags
+import data.utility as util
 
 class SyntaxE(Flags):
     Slack = 1
@@ -13,8 +14,11 @@ class Node:
          commandlist = [],
          decorator=None,
          syntax=SyntaxE.Ahead,
-         useRegex=False, desiredEnd = ".",
-         doOnlyOneFromSubthree = False):
+         useRegex=False,
+         desiredEnd = ".",
+         doOnlyOneFromSubthree = False,
+         doRememberWhenDone = True
+         ):
         self.Conditions = conditions
         self.OwnCommand = owncommand
         self.Decorator = decorator
@@ -23,23 +27,23 @@ class Node:
         self.UseRegex = useRegex
         self.DesiredEnd = desiredEnd
         self.DoOnlyOneFromSubthree = doOnlyOneFromSubthree
+        self.DoRememberWhenDone = doRememberWhenDone
 
 class DoOnlyOne(Node):
     def __init__(self,
      commandlist,
      decorator=None,
-     syntax=SyntaxE.Ahead,
-     useRegex=False,
      desiredEnd='.',
-     doOnlyOneFromSubthree=True):
+     ):
         super().__init__(
             [""],
             None,
             commandlist=commandlist,
             decorator=decorator,
-            syntax=syntax,
-            useRegex=useRegex,
+            syntax=SyntaxE.Slack,
+            useRegex=False,
             desiredEnd=desiredEnd,
-            doOnlyOneFromSubthree=doOnlyOneFromSubthree
+            doOnlyOneFromSubthree=True,
+            doRememberWhenDone=False
         )
 

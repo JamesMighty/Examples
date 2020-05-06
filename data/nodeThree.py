@@ -3,8 +3,8 @@ from data.node import *
 import datetime
 import data.userAPI as uapi
 
-global Three
-Three = [
+global RootThree
+RootThree = [
     Node(["ahoj","cus"],
      lambda setx, inp: "nazdar",
      [
@@ -14,7 +14,7 @@ Three = [
      ]
     ),
     Node(["pls"],
-     lambda setx, inp: None,
+     None,
      [
          Node(["se mas"],
           lambda setx, inp: "naprosto skvěle"
@@ -44,16 +44,25 @@ Three = [
      useRegex=True
     ),
     Node(["pomoc","co?"],
-     lambda setx, inp: print(Three)
+     lambda setx, inp: print(RootThree)
     ),
     Node(["co (.*) delas"],
      lambda setx, inp, kw: "idk, " + str(kw[0][0]),
      useRegex=True,
      desiredEnd="?"
     ),
-    Node(["zmen"],
+    Node(["zmen", "uprav"],
      None,
      [
+         DoOnlyOne([
+            Node(["format na '(.*)'"],
+                lambda setx, inp, kw: uapi.ChangeOutputFormat(setx, format=kw[0][0]),
+                useRegex=True
+            ),
+            Node(["format"],
+                lambda setx, inp: uapi.ChangeOutputFormat(setx)
+            )
+         ]),
          DoOnlyOne([
             Node(["jmeno na '(.*)'"],
                 lambda setx, inp, kw: uapi.ChangeUsername(setx, username=kw[0][0]),
@@ -62,10 +71,8 @@ Three = [
             Node(["jmeno"],
                 lambda setx, inp: uapi.ChangeUsername(setx)
             )
-         ]),
-         Node(["format"],
-            lambda setx, inp: uapi.ChangeOutputFormat(setx)
-         )
-     ]
-    )
+         ])
+     ])
+
+
     ]
