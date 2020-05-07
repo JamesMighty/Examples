@@ -13,8 +13,7 @@ RootThree = [
          )
      ]
     ),
-    Node(["pls"],
-     None,
+    CheckFor(["pls"],
      [
          Node(["se mas"],
           lambda setx, inp: "naprosto skvěle"
@@ -39,34 +38,26 @@ RootThree = [
          )
      ]
     ),
-    Node(["s{3}"],
-     lambda setx, inp: "nope",
-     useRegex=True
-    ),
     Node(["pomoc","co?"],
      lambda setx, inp: print(RootThree)
     ),
-    Node(["co (.*) delas"],
+    RegexNode(["co (.*) delas"],
      lambda setx, inp, kw: "idk, " + str(kw[0][0]),
-     useRegex=True,
      desiredEnd="?"
     ),
-    Node(["zmen", "uprav"],
-     None,
+    CheckFor(["zmen", "uprav"],
      [
          DoOnlyOne([
-            Node(["format na '(.*)'"],
+            RegexNode(["format na '(.*)'"],
                 lambda setx, inp, kw: uapi.ChangeOutputFormat(setx, format=kw[0][0]),
-                useRegex=True
             ),
             Node(["format"],
                 lambda setx, inp: uapi.ChangeOutputFormat(setx)
             )
          ]),
          DoOnlyOne([
-            Node(["jmeno na '(.*)'"],
+            RegexNode(["jmeno na '(.*)'"],
                 lambda setx, inp, kw: uapi.ChangeUsername(setx, username=kw[0][0]),
-                useRegex=True
             ),
             Node(["jmeno"],
                 lambda setx, inp: uapi.ChangeUsername(setx)

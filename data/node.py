@@ -11,7 +11,7 @@ class Node:
     def __init__(self,
          conditions,
          owncommand,
-         commandlist = [],
+         subThree = [],
          decorator=None,
          syntax=SyntaxE.Ahead,
          useRegex=False,
@@ -22,7 +22,7 @@ class Node:
         self.Conditions = conditions
         self.OwnCommand = owncommand
         self.Decorator = decorator
-        self.CommandList = commandlist
+        self.SubThree = subThree
         self.Syntax = syntax
         self.UseRegex = useRegex
         self.DesiredEnd = desiredEnd
@@ -31,14 +31,14 @@ class Node:
 
 class DoOnlyOne(Node):
     def __init__(self,
-     commandlist,
+     subThree,
      decorator=None,
      desiredEnd='.',
      ):
         super().__init__(
             [""],
             None,
-            commandlist=commandlist,
+            subThree=subThree,
             decorator=decorator,
             syntax=SyntaxE.Slack,
             useRegex=False,
@@ -47,3 +47,44 @@ class DoOnlyOne(Node):
             doRememberWhenDone=False
         )
 
+class CheckFor(Node):
+    def __init__(self,
+     conditions,
+     subThree,
+     decorator=None,
+     desiredEnd='.',
+     syntax=SyntaxE.Ahead,
+     useRegex=False
+     ):
+        super().__init__(
+            conditions,
+            None,
+            subThree=subThree,
+            decorator=decorator,
+            syntax=syntax,
+            useRegex=useRegex,
+            desiredEnd=desiredEnd,
+            doOnlyOneFromSubthree=False,
+            doRememberWhenDone=False
+        )
+
+class RegexNode(Node):
+    def __init__(self,
+     conditions,
+     owncommand,
+     subThree=[],
+     decorator=None,
+     desiredEnd='.',
+     syntax=SyntaxE.Ahead,
+     ):
+        super().__init__(
+            conditions,
+            owncommand,
+            subThree=subThree,
+            decorator=decorator,
+            syntax=syntax,
+            useRegex=True,
+            desiredEnd=desiredEnd,
+            doOnlyOneFromSubthree=False,
+            doRememberWhenDone=False
+        )

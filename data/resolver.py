@@ -20,7 +20,6 @@ class Resolver:
         todoList = sorted(todoList, key = lambda item: item.MatchIndex)
         wholeOutput = ""
         for item in todoList:
-            #print(item.Command.__dict__)
             outp = None
             if item.Command.OwnCommand != None:
                 if len(item.RegexGroups) > 0:
@@ -61,17 +60,13 @@ class Resolver:
                         inp = comm.Decorator(inp)
                     resolved = True
                     if comm.DoRememberWhenDone:
-                        #print("adding to resolvedMathes: "+str([match.__dict__ for match in matches]))
                         allResolvedMatches+=matches
-                    #else:
-                        #print(f"I won't remeber you: {comm.__dict__}")
-                    if len(comm.CommandList) > 0:
-                        additionalTodo = self.Resolve(comm.CommandList,inp,allResolvedMatches, lastMatch=matchOn, doPrintUnresolved=False,syntaxSetting=comm.Syntax,doOnlyOne=comm.DoOnlyOneFromSubthree)[0]
+                    if len(comm.SubThree) > 0:
+                        additionalTodo = self.Resolve(comm.SubThree,inp,allResolvedMatches, lastMatch=matchOn, doPrintUnresolved=False,syntaxSetting=comm.Syntax,doOnlyOne=comm.DoOnlyOneFromSubthree)[0]
                         todo.append( TodoItem(matchOn,comm, additionalTodo, [match.RegexGroups for match in matches if match.RegexGroups is not None]) )
                     else:
                         todo.append( TodoItem(matchOn,comm, [], [match.RegexGroups for match in matches if match.RegexGroups is not None]) )
                     if doOnlyOne:
-                        #print(f"did only one, breaking from parent of: {comm.Conditions}")
                         break
                 #else:
                     #print(f"skipped: {comm.Conditions}")
