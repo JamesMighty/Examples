@@ -17,3 +17,7 @@ def ChangeOutputFormat(context, format=None):
     else:
         context["indexation"] = format
     return f"Output format změněn na {context['indexation']}"
+
+def TurnTTS(context, IsOn):
+    context["DoSpeak"] = IsOn
+    return "No dobrá" if IsOn else "Už mlčím"

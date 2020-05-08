@@ -2,23 +2,26 @@
 from flags import Flags
 import data.utility as util
 
+
 class SyntaxE(Flags):
     Slack = 1
     Ahead = 2
     Next = 4
 
+
 class Node:
     def __init__(self,
-         conditions,
-         owncommand,
-         subThree = [],
-         decorator=None,
-         syntax=SyntaxE.Ahead,
-         useRegex=False,
-         desiredEnd = ".",
-         doOnlyOneFromSubthree = False,
-         doRememberWhenDone = True
-         ):
+                 conditions,
+                 owncommand,
+                 subThree=[],
+                 decorator=None,
+                 syntax=SyntaxE.Ahead,
+                 useRegex=False,
+                 desiredEnd=".",
+                 doOnlyOneFromSubthree=False,
+                 doRememberWhenDone=True,
+                 doNegateCondition=False
+                 ):
         self.Conditions = conditions
         self.OwnCommand = owncommand
         self.Decorator = decorator
@@ -28,13 +31,16 @@ class Node:
         self.DesiredEnd = desiredEnd
         self.DoOnlyOneFromSubthree = doOnlyOneFromSubthree
         self.DoRememberWhenDone = doRememberWhenDone
+        self.DoNegateCondition = doNegateCondition
+
 
 class DoOnlyOne(Node):
     def __init__(self,
-     subThree,
-     decorator=None,
-     desiredEnd='.',
-     ):
+                 subThree,
+                 decorator=None,
+                 desiredEnd='.',
+                 doNegateCondition=False
+                 ):
         super().__init__(
             [""],
             None,
@@ -44,18 +50,21 @@ class DoOnlyOne(Node):
             useRegex=False,
             desiredEnd=desiredEnd,
             doOnlyOneFromSubthree=True,
-            doRememberWhenDone=False
+            doRememberWhenDone=False,
+            doNegateCondition=doNegateCondition
         )
+
 
 class CheckFor(Node):
     def __init__(self,
-     conditions,
-     subThree,
-     decorator=None,
-     desiredEnd='.',
-     syntax=SyntaxE.Ahead,
-     useRegex=False
-     ):
+                 conditions,
+                 subThree,
+                 decorator=None,
+                 desiredEnd='.',
+                 syntax=SyntaxE.Ahead,
+                 useRegex=False,
+                 doNegateCondition=False
+                 ):
         super().__init__(
             conditions,
             None,
@@ -65,18 +74,21 @@ class CheckFor(Node):
             useRegex=useRegex,
             desiredEnd=desiredEnd,
             doOnlyOneFromSubthree=False,
-            doRememberWhenDone=False
+            doRememberWhenDone=False,
+            doNegateCondition=doNegateCondition
         )
+
 
 class RegexNode(Node):
     def __init__(self,
-     conditions,
-     owncommand,
-     subThree=[],
-     decorator=None,
-     desiredEnd='.',
-     syntax=SyntaxE.Ahead,
-     ):
+                 conditions,
+                 owncommand,
+                 subThree=[],
+                 decorator=None,
+                 desiredEnd='.',
+                 syntax=SyntaxE.Ahead,
+                 doNegateCondition=False
+                 ):
         super().__init__(
             conditions,
             owncommand,
@@ -86,5 +98,6 @@ class RegexNode(Node):
             useRegex=True,
             desiredEnd=desiredEnd,
             doOnlyOneFromSubthree=False,
-            doRememberWhenDone=False
+            doRememberWhenDone=False,
+            doNegateCondition=doNegateCondition
         )

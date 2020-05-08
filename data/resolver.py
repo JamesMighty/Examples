@@ -51,21 +51,21 @@ class Resolver:
                 matches = [Match(re.search(string, inp).span()[0], string, re.findall(string, inp)) for string in comm.Conditions if re.search(string,inp) is not None]
             else:
                 matches = [Match(inp.index(string),string) for string in comm.Conditions if string in inp]
-            if len(matches) > 0:
+            if len(matches) > 0 or (comm.NegateCondition and len(matches) == 0):
                 #print(matches)
                 matchOn = min([match.Index for match in matches])
-                if not anyCommon([match.String for match in matches],[resolvedMatch.String for resolvedMatch in allResolvedMatches]) and self.SyntaxCheck(lastMatch, matchOn, syntaxSetting):
+                if (comm.NegateCondition and len(matches) == 0) or (not anyCommon([match.String for match in matches],[resolvedMatch.String for resolvedMatch in allResolvedMatches]) and self.SyntaxCheck(lastMatch, matchOn, syntaxSetting)):
                     #print(f"passed: {comm.Conditions}")
                     if comm.Decorator != None:
-                        inp = comm.Decorator(inp)
-                    resolved = True
+                        subThreeInp = comm.Decorator(inp)
                     if comm.DoRememberWhenDone:
                         allResolvedMatches+=matches
                     if len(comm.SubThree) > 0:
-                        additionalTodo = self.Resolve(comm.SubThree,inp,allResolvedMatches, lastMatch=matchOn, doPrintUnresolved=False,syntaxSetting=comm.Syntax,doOnlyOne=comm.DoOnlyOneFromSubthree)[0]
+                        additionalTodo = self.Resolve(comm.SubThree,subThreeInp,allResolvedMatches, lastMatch=matchOn, doPrintUnresolved=False,syntaxSetting=comm.Syntax,doOnlyOne=comm.DoOnlyOneFromSubthree)[0]
                         todo.append( TodoItem(matchOn,comm, additionalTodo, [match.RegexGroups for match in matches if match.RegexGroups is not None]) )
                     else:
                         todo.append( TodoItem(matchOn,comm, [], [match.RegexGroups for match in matches if match.RegexGroups is not None]) )
+                    resolved = True
                     if doOnlyOne:
                         break
                 #else:
@@ -74,5 +74,5 @@ class Resolver:
                 #print(f"no match: {comm.Conditions}")
         #print([match.__dict__ for match in allResolvedMatches])       
         if doPrintUnresolved and not resolved:
-            todo.append(TodoItem(0,Node([],lambda inp: "co",desiredEnd="?"),[]))
+            todo.append(TodoItem(0,Node([],lambda setx,inp: "co",desiredEnd="?"),[]))
         return todo,inp

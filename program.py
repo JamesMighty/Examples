@@ -13,7 +13,8 @@ context = {
     "AIName": "May",
     "indexation":"->",
     "username": None,
-    "padding": 0
+    "padding": 0,
+    "DoSpeak": True
 }
 
 MayResolver = resolver.Resolver(context=context,rootThree=nodeThree.RootThree)
@@ -24,6 +25,7 @@ while True:
     todo = MayResolver.Resolve(RootThree, inp=inp, allResolvedMatches=[], lastMatch=0, doPrintUnresolved=True)[0]
     outp = MayResolver.Do(todo,inp)
     print(f"{MayResolver.Context['AIName']:{MayResolver.Context['padding']}}{MayResolver.Context['indexation']} " + outp)
-    TTS(outp)
+    if MayResolver.Context["DoSpeak"]:
+        TTS(outp)
 
 # Zkus do konzole napsat neco jako: Ahoj, jak se mas? nebo Ahoj, kolik je hodin?
