@@ -51,10 +51,10 @@ class Resolver:
                 matches = [Match(re.search(string, inp).span()[0], string, re.findall(string, inp)) for string in comm.Conditions if re.search(string,inp) is not None]
             else:
                 matches = [Match(inp.index(string),string) for string in comm.Conditions if string in inp]
-            if len(matches) > 0 or (comm.NegateCondition and len(matches) == 0):
+            if len(matches) > 0 or (comm.DoNegateCondition and len(matches) == 0):
                 #print(matches)
                 matchOn = min([match.Index for match in matches])
-                if (comm.NegateCondition and len(matches) == 0) or (not anyCommon([match.String for match in matches],[resolvedMatch.String for resolvedMatch in allResolvedMatches]) and self.SyntaxCheck(lastMatch, matchOn, syntaxSetting)):
+                if (comm.DoNegateCondition and len(matches) == 0) or (not anyCommon([match.String for match in matches],[resolvedMatch.String for resolvedMatch in allResolvedMatches]) and self.SyntaxCheck(lastMatch, matchOn, syntaxSetting)):
                     #print(f"passed: {comm.Conditions}")
                     if comm.Decorator != None:
                         subThreeInp = comm.Decorator(inp)
