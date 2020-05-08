@@ -58,6 +58,8 @@ class Resolver:
                     #print(f"passed: {comm.Conditions}")
                     if comm.Decorator != None:
                         subThreeInp = comm.Decorator(inp)
+                    else:
+                        subThreeInp = inp
                     if comm.DoRememberWhenDone:
                         allResolvedMatches+=matches
                     if len(comm.SubThree) > 0:
