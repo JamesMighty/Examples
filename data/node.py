@@ -20,7 +20,9 @@ class Node:
                  desiredEnd=".",
                  doOnlyOneFromSubthree=False,
                  doRememberWhenDone=True,
-                 doNegateCondition=False
+                 doNegateCondition=False,
+                 cleanUp=None,
+                 init=None
                  ):
         self.Conditions = conditions
         self.OwnCommand = owncommand
@@ -32,14 +34,14 @@ class Node:
         self.DoOnlyOneFromSubthree = doOnlyOneFromSubthree
         self.DoRememberWhenDone = doRememberWhenDone
         self.DoNegateCondition = doNegateCondition
+        self.CleanUp = cleanUp
+        self.Initialization = init
 
 
 class DoOnlyOne(Node):
     def __init__(self,
                  subThree,
                  decorator=None,
-                 desiredEnd='.',
-                 doNegateCondition=False
                  ):
         super().__init__(
             [""],
@@ -48,10 +50,12 @@ class DoOnlyOne(Node):
             decorator=decorator,
             syntax=SyntaxE.Slack,
             useRegex=False,
-            desiredEnd=desiredEnd,
+            desiredEnd="",
             doOnlyOneFromSubthree=True,
             doRememberWhenDone=False,
-            doNegateCondition=doNegateCondition
+            doNegateCondition=False,
+            cleanUp=None,
+            init=None
         )
 
 
@@ -63,7 +67,9 @@ class CheckFor(Node):
                  desiredEnd='.',
                  syntax=SyntaxE.Ahead,
                  useRegex=False,
-                 doNegateCondition=False
+                 doNegateCondition=False,
+                 cleanUp=None,
+                 init=None
                  ):
         super().__init__(
             conditions,
@@ -75,7 +81,9 @@ class CheckFor(Node):
             desiredEnd=desiredEnd,
             doOnlyOneFromSubthree=False,
             doRememberWhenDone=False,
-            doNegateCondition=doNegateCondition
+            doNegateCondition=doNegateCondition,
+            cleanUp=cleanUp,
+            init=init
         )
 
 
@@ -87,7 +95,9 @@ class RegexNode(Node):
                  decorator=None,
                  desiredEnd='.',
                  syntax=SyntaxE.Ahead,
-                 doNegateCondition=False
+                 doNegateCondition=False,
+                 cleanUp=None,
+                 init=None
                  ):
         super().__init__(
             conditions,
@@ -99,5 +109,7 @@ class RegexNode(Node):
             desiredEnd=desiredEnd,
             doOnlyOneFromSubthree=False,
             doRememberWhenDone=False,
-            doNegateCondition=doNegateCondition
+            doNegateCondition=doNegateCondition,
+            cleanUp=cleanUp,
+            init=init
         )

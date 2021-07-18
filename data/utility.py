@@ -5,15 +5,7 @@ import gtts
 import io
 
 
-def TTS(strs):
-    if strs != "":
-        bytest = io.BytesIO()
-        tts = gtts.gTTS(strs,lang="cs")
-        tts.write_to_fp(bytest)
-        isMixerInited = True
-        bytest.seek(0)
-        pygame.mixer.music.load(bytest)
-        pygame.mixer.music.play()
+
 
 def anyCommon(a, b): 
     a_set = set(a) 

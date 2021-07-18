@@ -21,3 +21,22 @@ def ChangeOutputFormat(context, format=None):
 def TurnTTS(context, IsOn):
     context["DoSpeak"] = IsOn
     return "No dobrá" if IsOn else "Už mlčím"
+
+def GetHelp(three, makeHeader=True, padding=3):
+    if makeHeader:
+        output = "Možné příkazy:\n"
+    else:
+        output = ""
+    for node in three:
+        output += f"{'':{padding}}-{node.Conditions}<{type(node).__name__}>\n"
+        if len(node.SubThree)>0:
+            output += GetHelp(node.SubThree, makeHeader=False, padding=padding+3)
+    return output
+
+def GetContextAnswerForSettings(context,var):
+    if var == "DoSpeak":
+        if context[var]:
+            return "Vždyť mluvím"
+        else:
+            return "Můžu, ale nechci"
+            

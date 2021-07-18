@@ -10,17 +10,39 @@ import json
 
 class Resolver:
 
+    @staticmethod
+    def GetDefaultContext():        
+        return {
+                "AIName": "May",
+                "indexation":"->",
+                "username": None,
+                "padding": 0,
+                "DoSpeak": True
+            }
+
     def __init__(self, context = None, rootThree = None):
         if context != None:
             self.Context = context
         if rootThree != None:
             self.RootThree = rootThree
+    
+    def TTS(self, strs):
+        if strs != "" and self.Context["DoSpeak"]:
+            bytest = io.BytesIO()
+            tts = gtts.gTTS(strs,lang="cs")
+            tts.write_to_fp(bytest)
+            isMixerInited = True
+            bytest.seek(0)
+            pygame.mixer.music.load(bytest)
+            pygame.mixer.music.play()
 
     def Do(self, todoList, inp):
         todoList = sorted(todoList, key = lambda item: item.MatchIndex)
         wholeOutput = ""
         for item in todoList:
             outp = None
+            if item.Command.Initialization != None:
+                item.Command.Initialization(self.Context)
             if item.Command.OwnCommand != None:
                 if len(item.RegexGroups) > 0:
                     outp = item.Command.OwnCommand(self.Context, inp, item.RegexGroups)
@@ -29,6 +51,8 @@ class Resolver:
             wholeOutput += (outp + (", " if len(item.SubTodoList) > 0 else item.Command.DesiredEnd + " ") if outp is not None else "" ) 
             if len(item.SubTodoList) > 0:
                 wholeOutput += self.Do(item.SubTodoList,inp)
+            if item.Command.CleanUp != None:
+                item.Command.CleanUp(self.Context)
         return wholeOutput
 
     def SyntaxCheck(self, lastMatch, matchOn, syntaxSetting):
@@ -37,14 +61,16 @@ class Resolver:
         return isConditionFirst and isConditionLast
 
     def Resolve(self, three=None, inp=None, allResolvedMatches=[], lastMatch=0, doPrintUnresolved=False, syntaxSetting=SyntaxE.Ahead, doOnlyOne=False):
-        if three == None:
-            three = self.RootThree
         resolved = False
         todo = []
+
+        if three == None:
+            three = self.RootThree
         if inp == None:
             inp = stripAccents(input(f"{self.Context['username']:{self.Context['padding']}}{self.Context['indexation']} ").lower())
         else:
             inp = stripAccents(inp.lower())
+
         for comm in three: 
             #print(f"checking: {comm.Conditions}")
             if comm.UseRegex:
@@ -78,3 +104,5 @@ class Resolver:
         if doPrintUnresolved and not resolved:
             todo.append(TodoItem(0,Node([],lambda setx,inp: "co",desiredEnd="?"),[]))
         return todo,inp
+
+

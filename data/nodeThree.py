@@ -5,7 +5,7 @@ import data.userAPI as uapi
 
 global RootThree
 RootThree = [
-    Node(["ahoj","cus"],
+    Node(["ahoj","cus","cau", "nazdar"],
         lambda setx, inp: "nazdar",
         [
             Node(["se mas", "ti je"], 
@@ -19,7 +19,7 @@ RootThree = [
                 lambda setx, inp: "naprosto skvěle"
             ),
             DoOnlyOne([
-                Node(["nemluv"],
+                Node(["nemluv","mlc"],
                     lambda setx, inp: uapi.TurnTTS(setx,False)
                 ),
                 Node(["mluv"],
@@ -47,7 +47,8 @@ RootThree = [
         ]
     ),
     Node(["pomoc","co?"],
-        lambda setx, inp: print(RootThree)
+        lambda setx, inp: uapi.GetHelp(RootThree),
+        desiredEnd="",
     ),
     RegexNode(["co (.*) delas"],
         lambda setx, inp, kw: "idk, " + str(kw[0][0]),
@@ -71,7 +72,13 @@ RootThree = [
                     lambda setx, inp: uapi.ChangeUsername(setx)
                 )
             ])
-        ])
-
-
+        ]
+    ),
+    CheckFor(["muzes", "umis", "dokazes"],
+    [
+        Node(["mluvit"],
+            lambda setx, inp: uapi.GetContextAnswerForSettings(setx, "DoSpeak")
+        )
+    ]
+    )
     ]
