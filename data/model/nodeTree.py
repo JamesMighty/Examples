@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from data.node import *
+from data.resources.node import *
 import datetime
-import data.userAPI as uapi
+import data.api.userAPI as uapi
 
 global RootThree
-RootThree = [
+RootTree = [
     Node(["ahoj","cus","cau", "nazdar"],
         lambda setx, inp: "nazdar",
         [
@@ -13,17 +13,17 @@ RootThree = [
             )
         ]
     ),
-    CheckFor(["pls"],
+    Find(["pls"],
         [
             Node(["se mas"],
                 lambda setx, inp: "naprosto skvěle"
             ),
             DoOnlyOne([
                 Node(["nemluv","mlc"],
-                    lambda setx, inp: uapi.TurnTTS(setx,False)
+                    lambda setx, inp: uapi.switch_tts(setx,False)
                 ),
                 Node(["mluv"],
-                    lambda setx, inp: uapi.TurnTTS(setx,True)
+                    lambda setx, inp: uapi.switch_tts(setx,True)
                 )
             ])
         ],
@@ -47,37 +47,37 @@ RootThree = [
         ]
     ),
     Node(["pomoc","co?"],
-        lambda setx, inp: uapi.GetHelp(RootThree),
+        lambda setx, inp: uapi.get_help(RootTree),
         desiredEnd="",
     ),
     RegexNode(["co (.*) delas"],
         lambda setx, inp, kw: "idk, " + str(kw[0][0]),
         desiredEnd="?"
     ),
-    CheckFor(["zmen", "uprav"],
+    Find(["zmen", "uprav"],
         [
             DoOnlyOne([
                 RegexNode(["format na '(.*)'"],
-                    lambda setx, inp, kw: uapi.ChangeOutputFormat(setx, format=kw[0][0]),
+                    lambda setx, inp, kw: uapi.change_output_format(setx, format=kw[0][0]),
                 ),
                 Node(["format"],
-                    lambda setx, inp: uapi.ChangeOutputFormat(setx)
+                    lambda setx, inp: uapi.change_output_format(setx)
                 )
             ]),
             DoOnlyOne([
                 RegexNode(["jmeno na '(.*)'"],
-                    lambda setx, inp, kw: uapi.ChangeUsername(setx, username=kw[0][0]),
+                    lambda setx, inp, kw: uapi.change_username(setx, username=kw[0][0]),
                 ),
                 Node(["jmeno"],
-                    lambda setx, inp: uapi.ChangeUsername(setx)
+                    lambda setx, inp: uapi.change_username(setx)
                 )
             ])
         ]
     ),
-    CheckFor(["muzes", "umis", "dokazes"],
+    Find(["muzes", "umis", "dokazes"],
     [
         Node(["mluvit"],
-            lambda setx, inp: uapi.GetContextAnswerForSettings(setx, "DoSpeak")
+            lambda setx, inp: uapi.get_context_answer_for_settings(setx, "DoSpeak")
         )
     ]
     )

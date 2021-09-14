@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flags import Flags
-import data.utility as util
+import data.lib.utility as util
 
 
 class SyntaxE(Flags):
@@ -59,7 +59,7 @@ class DoOnlyOne(Node):
         )
 
 
-class CheckFor(Node):
+class Find(Node):
     def __init__(self,
                  conditions,
                  subThree,

@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
-from data.nodeThree import RootThree
-import data.resolver as resolver
-import data.userAPI as uapi
-import data.nodeThree as nodeThree
+from data.model.consoleTree import ROOT_TREE
+import data.api.resolver as resolver
+import data.api.userAPI as uapi
+import data.model.generic as generic
+from data.lib.datastore.context import Context
 import pygame
 import json
 
 pygame.mixer.init()
 
-context = resolver.Resolver.GetDefaultContext()
-MayResolver = resolver.Resolver(context=context,rootThree=nodeThree.RootThree)
-uapi.ChangeUsername(MayResolver.Context)
+context = generic.DEFAULT_CONTEXT
+MayResolver = resolver.Resolver(context=context,rootThree=ROOT_TREE)
+uapi.change_username(MayResolver.context)
 
 while True:
-    inp = input(f"{MayResolver.Context['username']:{MayResolver.Context['padding']}}{MayResolver.Context['indexation']} ") # co se tice toho znaku -> nic lepsiho me nenapadlo ale mužes si vybrat  May:>, May>>>, May:, atd. 
-    todo = MayResolver.Resolve(RootThree, inp=inp, allResolvedMatches=[], lastMatch=0, doPrintUnresolved=True)[0]
-    outp = MayResolver.Do(todo,inp)
-    print(f"{MayResolver.Context['AIName']:{MayResolver.Context['padding']}}{MayResolver.Context['indexation']} " + outp)
-    MayResolver.TTS(outp)
-
-# Zkus do konzole napsat neco jako: Ahoj, jak se mas? nebo Ahoj, kolik je hodin?
+    inp = input(f"{MayResolver.context['username']:{MayResolver.context['padding']}}{MayResolver.context['indexation']} ")
+    todo = MayResolver.resolve(ROOT_TREE, query=inp, allResolvedMatches=[], lastMatch=0, doPrintUnresolved=True)[0]
+    outp = MayResolver.do(todo,inp)
+    MayResolver.add_to_history((inp,outp))
+    print(f"{MayResolver.context['AIName']:{MayResolver.context['padding']}}{MayResolver.context['indexation']} " + outp)
+    MayResolver.tts(outp)
