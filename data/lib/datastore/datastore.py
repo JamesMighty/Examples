@@ -1,9 +1,8 @@
-
-from datetime import datetime
 import json
-from typing import Any, KeysView, Mapping, Union
-import uuid
 import pickle
+import uuid
+from datetime import datetime
+from typing import Any, Iterable, KeysView, Mapping, Union
 
 
 class Datastore(dict):
@@ -25,11 +24,8 @@ class Datastore(dict):
         return super().__getitem__(k)
     
     def __str__(self) -> str:
-        outp = None
-        try:
-            outp = json.dumps(self, indent=4)
-        except Exception as e:
-            outp = super().__str__()
+
+        outp = json.dumps(self, indent=4)
         return outp
 
     def filter(self, names: list, white_list=True, show_private=False) -> 'Datastore':
@@ -124,10 +120,21 @@ class PointerDatastore(Datastore):
         except:
             return _dict.__str__()
 
-class DatastoreProvider():
+class DatastoreProvider:
 
-    def __init__(self) -> None:
+    def __init__(self, attr_name, payload={}) -> None:
+        self._attr_name = attr_name
+        self.datastore.update(payload)
+    
+    @property
+    def datastore(self) -> Datastore:
+        return self.__getattribute__(self._attr_name)
+
+class DatastoreRootProvider(DatastoreProvider):
+
+    def __init__(self, payload={}) -> None:
         self._datastore = Datastore()
+        self.datastore.update(payload)
     
     @property
     def datastore(self) -> Datastore:
@@ -135,16 +142,45 @@ class DatastoreProvider():
 
 class DatastoreSubscriber():
 
-    def __init__(self, provider: DatastoreProvider, id=str(uuid.uuid4())) -> None:
-        self._provider = provider
-        self.id = id
-        self.datastore["_subtype"] = self.__class__.__name__
-        self.datastore["_subbases"] = [_class.__name__ for _class in self.__class__.__bases__]
-        self.datastore["_subfrom"] = datetime.utcnow().timestamp()
+    def __init__(self, id:str=None) -> None:
+        if id:
+            self.id = id
+        else:
+            self.id = str(uuid.uuid4())
+        self._is_subscribed = False
+
+    @property
+    def is_subscribed(self) -> bool:
+        return self._is_subscribed
 
     @property
     def datastore(self) -> Datastore:
         return self._provider.datastore[self.id]
+    
+    @property
+    def parent_datastore(self) -> Datastore:
+        return self._provider.datastore
+    
+    def subscribe(self, provider: DatastoreRootProvider, payload:Iterable={}):
+        if not self.is_subscribed:
+            self._provider = provider
+            self.datastore["_subtype"] = self.__class__.__name__
+            self.datastore["_subbases"] = [_class.__name__ for _class in self.__class__.__bases__]
+            self.datastore["_subfrom"] = datetime.utcnow().timestamp()
+            self._is_subscribed = True
+            self.datastore.update(payload)
+    
+    def unsubscribe(self, pop_datastore=False):
+        if self.is_subscribed:
+            if pop_datastore:
+                self._provider.datastore.pop(self.id)
+            else:
+                self.datastore.pop("_subtype")
+                self.datastore.pop("_subbases")
+                self.datastore.pop("_subfrom")
+            self._provider = None
+            self._is_subscribed = False
+
 
 class DumpDatastore(Datastore):
 

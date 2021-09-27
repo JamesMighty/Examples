@@ -1,5 +1,5 @@
-from data.resources.sqldatastore import sqliteDatastore
+from data.lib.datastore.sqldatastore import SqliteDatastore
 
-datastore = sqliteDatastore("data/model/context.db","sandbox")
+datastore = SqliteDatastore("data/model/context.db", "sandbox")
 print(datastore["ahoj"])
 datastore.save()

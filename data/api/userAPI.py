@@ -1,18 +1,21 @@
-from data.lib.datastore.context import Context
-import data.api.resolver as resolver
-from data.resources.command import Command
 import json
+import data.api.resolver as resolver
+from data.lib.datastore.context import Context
+from data.resources.command import Command
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from data.api.resolver import Resolver
 
 
 class GetContextCommand(Command):
 
-    def __call__(self, context: Context, query: str, **kwargs) -> str:
-        return context
+    def __call__(self, resolver: 'Resolver', query: str, **kwargs) -> str:
+        return resolver.globalContext
 
 class GetHistoryContextCommand(Command):
 
-    def __call__(self, context: Context, query: str, **kwargs) -> str:
-        return str(context["_history"])
+    def __call__(self, resolver: 'Resolver', query: str, **kwargs) -> str:
+        return str(resolver.globalContext["_history"])
         
 def change_username(context, username = None):
     if username == None:

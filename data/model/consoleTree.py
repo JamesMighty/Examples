@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-import data.api.userAPI as uapi
 import datetime
 
 import data.api.consoletreeapi as cmdapi
+import data.api.userAPI as uapi
 from data.resources.node import *
-
 
 ROOT_TREE = [
     Find(["run"], [
@@ -14,14 +13,16 @@ ROOT_TREE = [
 
     ]),
     Find(["show", "print"],[
-        Node(["context", "know"],
-            uapi.GetContextCommand()
-        ),
-        Node(["history"],
-            uapi.GetHistoryContextCommand()
-        )
+        DoOnlyOne([
+            Node(["context", "know"],
+                uapi.GetContextCommand()
+            ),
+            Node(["history"],
+                uapi.GetHistoryContextCommand()
+            )
+        ])
     ]),
-    RegexNode(["run (.*)"],
+    RegexNode(["run (.*)","start (.*)"],
         cmdapi.PopenCommand()
     )
 ]

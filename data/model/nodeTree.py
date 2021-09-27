@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from data.resources.node import *
 import datetime
+
 import data.api.userAPI as uapi
+from data.resources.node import *
 
 global RootThree
 RootTree = [
@@ -27,7 +28,7 @@ RootTree = [
                 )
             ])
         ],
-        syntax=SyntaxE.Slack
+        syntax=SyntaxTypes.Slack
     ),
     Node(["se mas","ti je"],
         lambda setx, inp: "na prd"
@@ -47,13 +48,13 @@ RootTree = [
         ]
     ),
     Node(["pomoc","co?"],
-        lambda setx, inp: uapi.get_help(RootTree),
-        desiredEnd="",
-    ),
+         lambda setx, inp: uapi.get_help(RootTree),
+         desired_end="",
+         ),
     RegexNode(["co (.*) delas"],
-        lambda setx, inp, kw: "idk, " + str(kw[0][0]),
-        desiredEnd="?"
-    ),
+              lambda setx, inp, kw: "idk, " + str(kw[0][0]),
+              desired_end="?"
+              ),
     Find(["zmen", "uprav"],
         [
             DoOnlyOne([

@@ -1,5 +1,6 @@
-import sqlite3
 import atexit
+import sqlite3
+
 
 class sqliteTableSocket:
 

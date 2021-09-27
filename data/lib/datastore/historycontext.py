@@ -1,13 +1,14 @@
+import json
 import re
 from typing import Any, Union
-import json
+
 from data.lib.datastore.context import Context, sqliteContext
 
 
 class HistoryContext(Context[str,list[str]]):
 
     def __init__(self, iterable=(), **kwargs):
-        super().__init__(iterable=iterable, **kwargs)
+        super().__init__(payload=iterable, **kwargs)
     
     def __setitem__(self, name: str, value: Union[str, list[str]]) -> None:
         if name in self:

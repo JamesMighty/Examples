@@ -1,7 +1,6 @@
-
-from data.lib.datastore.historycontext import HistoryContext, sqliteHistoryContext
 from data.lib.datastore.context import Context
-
+from data.lib.datastore.historycontext import (HistoryContext,
+                                               sqliteHistoryContext)
 
 DEFAULT_CONTEXT = Context({
                 "AIName": "May",

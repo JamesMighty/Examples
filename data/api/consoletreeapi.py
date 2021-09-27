@@ -1,8 +1,8 @@
 import subprocess
 import sys
 
-from data.resources.command import Command
 from data.lib.datastore.context import Context
+from data.resources.command import Command
 
 
 class RunCmdCommand(Command):
