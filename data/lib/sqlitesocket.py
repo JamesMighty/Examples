@@ -1,41 +1,72 @@
 import atexit
-import sqlite3
+from sqlite3.dbapi2 import Connection
+from data.lib.sqlquery import SqlQuery, TableSqlQuery
 
 
-class sqliteTableSocket:
-
-    def __init__(self, db_path, table_name, items_buffer_count:int=10) -> None:
+class SqliteSocket(Connection):
+    """
+    Expands sqlite3 connection api
+    """
+    def __init__(self, db_path:str):
+        """
+        Args:
+            db_path (str): path to database file
+        """
+        super().__init__(db_path)
         self._db_path = db_path
-        self._is_connected = False
-        self._items_buffer_count = items_buffer_count
-        self._request_count = 0
-        self.table_name = table_name
-        
-        self._dbconnection = sqlite3.connect(db_path)
-        self._cursor = self._dbconnection.cursor()
-        self._is_connected = True
-        self._create_table_if_not_exist()
-        self.save()
-
-        atexit.register(self.discard)
+        self.is_open = True
+        atexit.register(self.close)
     
-    def _create_table_if_not_exist(self):
-        query = f'''CREATE TABLE IF NOT EXISTS {self.table_name} (ID INTEGER PRIMARY KEY,Key TEXT NOT NULL,Value BLOB,table_constraints)'''
-        self._cursor.execute(query)
+    @property
+    def cursor(self):
+        """
+        Returns new cursor.
+        """
+        return super().cursor()
+    
+    @property
+    def query(self):
+        return SqlQuery(self)
 
-    def _next_request(self):
-        self._request_count+=1
-        if self._request_count == self._items_buffer_count:
+    def close(self):
+        """
+        If socket is alive, commits transactions and closes connection.\n
+        Natively called at program exit.
+        """
+        if self.is_open:
             self.save()
-            self._request_count = 0
+            self.close()
+            self.is_open = False
     
     def discard(self):
-        if self._is_connected:
-            self.save()
-            self._dbconnection.close()
-            self._is_connected = False
+        """
+        If socket is alive, closes connection without commiting transactions.\n
+        """
+        if self.is_open:
+            self.close()
+            self.is_open = False
     
     def save(self):
-        if self._is_connected:
-            self._dbconnection.commit()
+        """
+        If socket is still alive, commits executed transactions.
+        """
+        if self.is_open:
+            self.commit()
+class sqliteTableSocket(SqliteSocket):
+
+    """[summary]\n
+    Defines sqlite socket for specified table in db file.\n
+    If the table does not exist, create one.
+    """
+    def __init__(self, db_path:str, table_name:str, table_scheme:str) -> None:
+        super().__init__(db_path)
+        self.table_name = table_name
+        self.table_scheme = table_scheme
+        SqlQuery(self).create_table_if_not_exists(self.table_name,self.table_scheme).execute()
+        self.save()
+    
+    @property
+    def query(self):
+        return TableSqlQuery(self)
+    
     

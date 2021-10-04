@@ -3,10 +3,17 @@ import pickle
 import uuid
 from datetime import datetime
 from typing import Any, Iterable, KeysView, Mapping, Union
-
+from enum import Enum
 
 class Datastore(dict):
+    """
+    Expands dict. Adds filtering and metadata.
 
+    On value set: if the key is not in the set, it will be added to the set.
+
+    Args:
+        dict ([type]): [description]
+    """
     def __init__(self, payload:dict=None, create_meta:bool=True) -> None:
         if create_meta:
             meta = {
@@ -29,9 +36,10 @@ class Datastore(dict):
         return outp
 
     def filter(self, names: list, white_list=True, show_private=False) -> 'Datastore':
-        """[summary]\n
-        filters out specified vars names based on whether act as whitelist/blacklist\n
-        implicitly ignores private vars (starts with '_')\n
+        """
+        filters out specified vars names based on whether to act as a whitelist/blacklist
+
+        implicitly ignores private vars (starts with '_')
         """
         payload = {}
         for key in self:
@@ -90,7 +98,9 @@ class Datastore(dict):
         else:
             return None
 
-class PointerDatastore(Datastore):
+
+
+class PointerDatastore(Datastore): # TODO: WIP
 
     def __init__(self, object: object, wrapper) -> None:
         super().__init__(create_meta=True)
@@ -121,7 +131,9 @@ class PointerDatastore(Datastore):
             return _dict.__str__()
 
 class DatastoreProvider:
-
+    """
+    Propagates datastore to subcribers
+    """
     def __init__(self, attr_name, payload={}) -> None:
         self._attr_name = attr_name
         self.datastore.update(payload)
@@ -131,7 +143,9 @@ class DatastoreProvider:
         return self.__getattribute__(self._attr_name)
 
 class DatastoreRootProvider(DatastoreProvider):
-
+    """
+    Datastore provider with root instance of Datastore
+    """
     def __init__(self, payload={}) -> None:
         self._datastore = Datastore()
         self.datastore.update(payload)
@@ -141,7 +155,10 @@ class DatastoreRootProvider(DatastoreProvider):
         return self._datastore
 
 class DatastoreSubscriber():
-
+    """
+    DatastoreSubscriber can input its data to propagated Datastore when subscribed to a DatastoreProvider.\n
+    Also propagetes the Datastore further.
+    """
     def __init__(self, id:str=None) -> None:
         if id:
             self.id = id
@@ -161,7 +178,7 @@ class DatastoreSubscriber():
     def parent_datastore(self) -> Datastore:
         return self._provider.datastore
     
-    def subscribe(self, provider: DatastoreRootProvider, payload:Iterable={}):
+    def subscribe(self, provider: DatastoreProvider, payload:Iterable={}):
         if not self.is_subscribed:
             self._provider = provider
             self.datastore["_subtype"] = self.__class__.__name__
@@ -170,26 +187,37 @@ class DatastoreSubscriber():
             self._is_subscribed = True
             self.datastore.update(payload)
     
-    def unsubscribe(self, pop_datastore=False):
+    def unsubscribe(self, pop_datastore=False) -> Union['Datastore',dict]:
         if self.is_subscribed:
-            if pop_datastore:
-                self._provider.datastore.pop(self.id)
-            else:
-                self.datastore.pop("_subtype")
-                self.datastore.pop("_subbases")
-                self.datastore.pop("_subfrom")
-            self._provider = None
-            self._is_subscribed = False
+            try:
+                if pop_datastore:
+                    return self._provider.datastore.pop(self.id)
+                else:
+                    meta = {
+                        "_subtype": self.datastore.pop("_subtype"),
+                        "_subbases": self.datastore.pop("_subbases"),
+                        "_subfrom": self.datastore.pop("_subfrom")
+                    }
+                    return meta
+            finally:
+                self._provider = None
+                self._is_subscribed = False
+    
+    def pop(self) -> 'Datastore':
+        self.unsubscribe(pop_datastore=True)
 
-
+class DumpAs(Enum):
+        JSON = 1
+        PICKLE = 2
 class DumpDatastore(Datastore):
 
     def __init__(self,file_path:str, payload: dict={}, create_meta: bool=True) -> None:
         super().__init__(payload=payload, create_meta=create_meta)
         self._file_path = file_path
     
-    def dump(self):
-        pickle.dump(self,self._file_path)
-        
-
+    def dump(self, dump_as=DumpAs.PICKLE):
+        if dump_as == DumpAs.JSON:
+            json.dump(self,self._file_path)
+        elif dump_as == DumpAs.PICKLE:
+            pickle.dump(self,self._file_path)
     

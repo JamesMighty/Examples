@@ -47,3 +47,6 @@ class sqliteHistoryContext(sqliteContext[str,list[str]]):
         for item in self:
             dic[item[0]] = item[1]
         return json.dumps(dic, indent=4)
+    
+    def save(self):
+        self.db.save()
