@@ -6,6 +6,13 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "run May",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/program.py",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}"
         },
@@ -13,7 +20,7 @@
             "name": "Python: program",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/program.py",
+            "program": "${}",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}"
         }

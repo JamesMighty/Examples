@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{f6f67338-f8d6-4da7-9bdc-428425f9c82b}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>program.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include=".gitattributes" />
+    <Content Include=".gitignore" />
+    <Content Include=".git\config" />
+    <Content Include=".git\description" />
+    <Content Include=".git\HEAD" />
+    <Content Include=".git\hooks\applypatch-msg.sample" />
+    <Content Include=".git\hooks\commit-msg.sample" />
+    <Content Include=".git\hooks\fsmonitor-watchman.sample" />
+    <Content Include=".git\hooks\post-update.sample" />
+    <Content Include=".git\hooks\pre-applypatch.sample" />
+    <Content Include=".git\hooks\pre-commit.sample" />
+    <Content Include=".git\hooks\pre-merge-commit.sample" />
+    <Content Include=".git\hooks\pre-push.sample" />
+    <Content Include=".git\hooks\pre-rebase.sample" />
+    <Content Include=".git\hooks\pre-receive.sample" />
+    <Content Include=".git\hooks\prepare-commit-msg.sample" />
+    <Content Include=".git\hooks\update.sample" />
+    <Content Include=".git\index" />
+    <Content Include=".git\info\exclude" />
+    <Content Include=".git\logs\HEAD" />
+    <Content Include=".git\logs\refs\heads\master" />
+    <Content Include=".git\logs\refs\remotes\origin\HEAD" />
+    <Content Include=".git\objects\pack\pack-ccb5796c24163166f34565d697a21e91d028a689.idx" />
+    <Content Include=".git\objects\pack\pack-ccb5796c24163166f34565d697a21e91d028a689.pack" />
+    <Content Include=".git\packed-refs" />
+    <Content Include=".git\refs\heads\master" />
+    <Content Include=".git\refs\remotes\origin\HEAD" />
+    <Content Include=".vscode\launch.json" />
+    <Content Include=".vs\May\v16\.suo" />
+    <Content Include=".vs\slnx.sqlite" />
+    <Content Include=".vs\VSWorkspaceState.json" />
+    <Content Include="gauge-tests\.gitignore" />
+    <Content Include="gauge-tests\.vscode\extensions.json" />
+    <Content Include="gauge-tests\.vscode\settings.json" />
+    <Content Include="gauge-tests\env\default\default.properties" />
+    <Content Include="gauge-tests\env\default\python.properties" />
+    <Content Include="gauge-tests\manifest.json" />
+    <Content Include="gauge-tests\requirements.txt" />
+    <Content Include="gauge-tests\specs\tests.spec" />
+    <Content Include="May.pyproj" />
+    <Content Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="data\match.py" />
+    <Compile Include="data\node.py" />
+    <Compile Include="data\nodeThree.py" />
+    <Compile Include="data\resolver.py" />
+    <Compile Include="data\todoItem.py" />
+    <Compile Include="data\utility.py" />
+    <Compile Include="gauge-tests\steps\step_impl.py" />
+    <Compile Include="gauge-tests\steps\__init__.py" />
+    <Compile Include="program.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include=".git" />
+    <Folder Include=".git\hooks" />
+    <Folder Include=".git\info" />
+    <Folder Include=".git\logs" />
+    <Folder Include=".git\logs\refs\" />
+    <Folder Include=".git\logs\refs\heads" />
+    <Folder Include=".git\logs\refs\remotes\" />
+    <Folder Include=".git\logs\refs\remotes\origin" />
+    <Folder Include=".git\objects\" />
+    <Folder Include=".git\objects\pack" />
+    <Folder Include=".git\refs\" />
+    <Folder Include=".git\refs\heads" />
+    <Folder Include=".git\refs\remotes\" />
+    <Folder Include=".git\refs\remotes\origin" />
+    <Folder Include=".vs" />
+    <Folder Include=".vscode" />
+    <Folder Include=".vs\May\" />
+    <Folder Include=".vs\May\v16" />
+    <Folder Include="data" />
+    <Folder Include="gauge-tests" />
+    <Folder Include="gauge-tests\.vscode" />
+    <Folder Include="gauge-tests\env\" />
+    <Folder Include="gauge-tests\env\default" />
+    <Folder Include="gauge-tests\specs" />
+    <Folder Include="gauge-tests\steps" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>
